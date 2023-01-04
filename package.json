@@ -11,7 +11,8 @@
     "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "build": "npx tsc",
     "start": "nodemon src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "jasmine": "jasmine",
+    "test": "npm run build && npm run jasmine"
   },
   "repository": {
     "type": "git",
@@ -25,10 +26,13 @@
   "homepage": "https://github.com/Kenny-Rogers/cd0292-building-a-server-project-starter#readme",
   "dependencies": {
     "express": "^4.18.2",
+    "jasmine": "^4.5.0",
+    "jasmine-spec-reporter": "^7.0.0",
     "typescript": "^4.9.4"
   },
   "devDependencies": {
     "@types/express": "^4.17.15",
+    "@types/jasmine": "^4.3.1",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
     "@typescript-eslint/parser": "^5.48.0",
     "eslint": "^8.31.0",
