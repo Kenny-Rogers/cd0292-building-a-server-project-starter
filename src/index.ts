@@ -6,7 +6,7 @@ import imageLib from './libs/imageLib';
 const app = express();
 const port = 3000;
 
-app.get('/health_check', (req, res) => {
+app.get('/health_check', async (req, res) => {
   res.send('Application running ok');
 });
 
@@ -57,3 +57,5 @@ app.get(
 app.listen(port, () => {
   console.log(`server started at localhost:${port}`);
 });
+
+export default app;

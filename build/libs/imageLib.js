@@ -37,7 +37,7 @@ const convertImage = (fileName, width, height) => __awaiter(void 0, void 0, void
         const image = (0, sharp_1.default)(getInputFilePath(fileName));
         image.resize(Number(width), Number(height));
         image.toFormat('jpeg');
-        yield image.toFile(getOutputFilePath(fileName));
+        yield image.toFile(getOutputFilePath(generateFileName(fileName, width, height)));
         return true;
     }
     catch (error) {

@@ -17,9 +17,11 @@ const fetchCacheIfExist = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     const { width, height, name } = req.query;
     const outputFilePath = imageLib_1.default.getOutputFilePath(imageLib_1.default.generateFileName(name, width, height));
     const fileExist = yield imageLib_1.default.fileExist(outputFilePath);
+    console.log(`file ${outputFilePath} exist: ${fileExist}`);
     if (fileExist) {
         res.set('Content-Type', 'image/jpeg');
         imageLib_1.default.readFile(outputFilePath).pipe(res);
+        return res.status(200);
     }
     next();
 });

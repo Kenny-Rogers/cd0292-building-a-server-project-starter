@@ -39,12 +39,10 @@ const convertImage = async (
     image.resize(Number(width), Number(height));
     image.toFormat('jpeg');
 
-    await image.toFile(getOutputFilePath(generateFileName(
-      fileName,
-      width,
-      height 
-    )));
-    
+    await image.toFile(
+      getOutputFilePath(generateFileName(fileName, width, height))
+    );
+
     return true;
   } catch (error) {
     return false;
