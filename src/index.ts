@@ -14,11 +14,13 @@ app.get(
   '/images',
   [validateParams, fetchCacheIfExist],
   async (req: express.Request, res: express.Response) => {
-    const { width, height, fileName } = req.query;
+    const { width, height, name } = req.query;
 
-    const inputFilePath = imageLib.getInputFilePath(fileName as string);
+    const inputFilePath = imageLib.getInputFilePath(name as string);
+    console.log(`Generated input file name ${inputFilePath}`);
 
-    const fileExist =  await imageLib.fileExist(inputFilePath);
+    const fileExist = await imageLib.fileExist(inputFilePath);
+    console.log(`Input file exist: ${fileExist}`);
 
     res.set('Content-Type', 'image/jpeg');
 
@@ -27,10 +29,12 @@ app.get(
     }
 
     const convertResponse = await imageLib.convertImage(
-      fileName as string,
+      name as string,
       width as unknown as number,
       height as unknown as number
     );
+
+    console.log(`Convert Images response ${convertResponse}`);
 
     if (!convertResponse) {
       return res.status(500).send('Failed to convert image');
@@ -39,7 +43,7 @@ app.get(
     const file = imageLib.readFile(
       imageLib.getOutputFilePath(
         imageLib.generateFileName(
-          fileName as string,
+          name as string,
           width as unknown as number,
           height as unknown as number
         )

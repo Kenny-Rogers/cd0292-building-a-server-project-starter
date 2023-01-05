@@ -18,22 +18,22 @@ const imageCacheMiddleware_1 = __importDefault(require("./utilities/imageCacheMi
 const imageLib_1 = __importDefault(require("./libs/imageLib"));
 const app = (0, express_1.default)();
 const port = 3000;
-app.get('/api', (req, res) => {
-    res.send('Hello, world!');
+app.get('/health_check', (req, res) => {
+    res.send('Application running ok');
 });
 app.get('/images', [imageResizeParamsValidator_1.default, imageCacheMiddleware_1.default], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { width, height, fileName } = req.query;
-    const inputFilePath = imageLib_1.default.getInputFilePath(fileName);
+    const { width, height, name } = req.query;
+    const inputFilePath = imageLib_1.default.getInputFilePath(name);
     const fileExist = yield imageLib_1.default.fileExist(inputFilePath);
     res.set('Content-Type', 'image/jpeg');
     if (!fileExist) {
         return res.status(404).send('File not found');
     }
-    const convertResponse = yield imageLib_1.default.convertImage(fileName, width, height);
+    const convertResponse = yield imageLib_1.default.convertImage(name, width, height);
     if (!convertResponse) {
         return res.status(500).send('Failed to convert image');
     }
-    const file = imageLib_1.default.readFile(imageLib_1.default.getOutputFilePath(imageLib_1.default.generateFileName(fileName, width, height)));
+    const file = imageLib_1.default.readFile(imageLib_1.default.getOutputFilePath(imageLib_1.default.generateFileName(name, width, height)));
     file.pipe(res);
 }));
 app.listen(port, () => {

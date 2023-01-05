@@ -68,7 +68,7 @@ $ npm run test
 ### Test endpoints
 [Health Check](http://localhost:3000/health_check)
 
-[Get Image ](http://localhost:3000/images?width=200&height=200&fileName=fjord)
+[Get Image ](http://localhost:3000/images?width=200&height=200&name=fjord)
 
 
 ## License

@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const validateParams = (req, res, next) => {
-    const { width, height, fileName } = req.query;
-    if (!width || !height || !fileName) {
+    const { width, height, name } = req.query;
+    if (!width || !height || !name) {
         return res
             .status(400)
-            .send('Width, height and fileName parameters are required');
+            .send('Width, height and name parameters are required');
     }
     next();
 };

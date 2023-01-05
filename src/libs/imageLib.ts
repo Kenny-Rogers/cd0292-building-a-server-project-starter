@@ -14,16 +14,16 @@ const getInputFilePath = (fileName: string): string =>
   `./images/${fileName}.jpg`;
 
 const fileExist = async (filePath: string): Promise<boolean> => {
-    try {
-      await fs.promises.stat(filePath);
-      return true;
-    } catch (error: any) {
-      if (error.code === 'ENOENT') {
-        return false;
-      }
-      throw error;
+  try {
+    await fs.promises.stat(filePath);
+    return true;
+  } catch (error: unknown) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return false;
     }
-  };
+    throw error;
+  }
+};
 
 const readFile = (filePath: string): fs.ReadStream => {
   return fs.createReadStream(filePath);
@@ -39,7 +39,12 @@ const convertImage = async (
     image.resize(Number(width), Number(height));
     image.toFormat('jpeg');
 
-    await image.toFile(getOutputFilePath(fileName));
+    await image.toFile(getOutputFilePath(generateFileName(
+      fileName,
+      width,
+      height 
+    )));
+    
     return true;
   } catch (error) {
     return false;

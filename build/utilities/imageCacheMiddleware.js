@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const imageLib_1 = __importDefault(require("../libs/imageLib"));
 const fetchCacheIfExist = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { width, height, fileName } = req.query;
-    const outputFilePath = imageLib_1.default.getOutputFilePath(imageLib_1.default.generateFileName(fileName, width, height));
+    const { width, height, name } = req.query;
+    const outputFilePath = imageLib_1.default.getOutputFilePath(imageLib_1.default.generateFileName(name, width, height));
     const fileExist = yield imageLib_1.default.fileExist(outputFilePath);
     if (fileExist) {
         res.set('Content-Type', 'image/jpeg');
