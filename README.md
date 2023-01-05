@@ -56,6 +56,21 @@ Feel free to attempt to create this project based on the overview and rubric spe
 
 Although not a requirement, we recommend using Git from the very beginning if you choose to build on your local environment or use the provided workspace. Make sure to commit often and to use well-formatted commit messages.
 
+## Project details
+
+### Setup 
+```bash
+$ npm i 
+$ npm run start
+$ npm run test
+```
+
+### Test endpoints
+[Health Check](http://localhost:3000/health_check)
+
+[Get Image ](http://localhost:3000/images?width=200&height=200&fileName=fjord)
+
+
 ## License
 
 [License](LICENSE.txt)

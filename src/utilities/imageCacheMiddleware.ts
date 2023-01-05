@@ -1,26 +1,29 @@
 import express from 'express';
-import fs from 'fs';
+import imageLib from '../libs/imageLib';
 
 type CallbackFunction = () => void;
 
-const fetchCacheIfExist = (
+const fetchCacheIfExist = async (
   req: express.Request,
   res: express.Response,
   next: CallbackFunction
-): void | express.Response => {
+): Promise<void | express.Response>  => {
   const { width, height, fileName } = req.query;
 
-  const outputFile = `${fileName}x${width}x${height}`;
-  const outputFilePath = `./processedImages/${outputFile}.jpg`;
+  const outputFilePath = imageLib.getOutputFilePath(
+    imageLib.generateFileName(
+      fileName as string,
+      width as unknown as number,
+      height as unknown as number
+    )
+  );
 
-  fs.stat(outputFilePath, (error, stats) => {
-    if (!error) {
-      res.set('Content-Type', 'image/jpeg');
-      res.set('Content-Length', `${stats.size}`);
+  const fileExist =  await imageLib.fileExist(outputFilePath);
+  if (fileExist) {
+    res.set('Content-Type', 'image/jpeg');
 
-      fs.createReadStream(outputFilePath).pipe(res);
-    }
-  });
+    imageLib.readFile(outputFilePath).pipe(res);
+  }
 
   next();
 };

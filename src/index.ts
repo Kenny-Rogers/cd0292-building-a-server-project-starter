@@ -1,49 +1,52 @@
 import express from 'express';
-import sharp from 'sharp';
-import fs from 'fs';
 import validateParams from './utilities/imageResizeParamsValidator';
 import fetchCacheIfExist from './utilities/imageCacheMiddleware';
+import imageLib from './libs/imageLib';
 
 const app = express();
 const port = 3000;
 
-app.get('/api', (req, res) => {
-  res.send('Hello, world!');
+app.get('/health_check', (req, res) => {
+  res.send('Application running ok');
 });
 
 app.get(
   '/images',
   [validateParams, fetchCacheIfExist],
-  (req: express.Request, res: express.Response) => {
+  async (req: express.Request, res: express.Response) => {
     const { width, height, fileName } = req.query;
 
-    // Check if the image is already in the cache
-    const outputFile = `${fileName}x${width}x${height}`;
+    const inputFilePath = imageLib.getInputFilePath(fileName as string);
 
-    //get file path
-    const filePath = `./images/${fileName}.jpg`;
-    const outputFilePath = `./processedImages/${outputFile}.jpg`;
+    const fileExist =  await imageLib.fileExist(inputFilePath);
 
-    //validate if file exists
-    fs.stat(filePath, (error) => {
-      if (error) {
-        if (error.code === 'ENOENT') {
-          return res.status(404).send('File not found');
-        }
-        return res.status(500).send(error);
-      }
+    res.set('Content-Type', 'image/jpeg');
 
-      sharp(filePath)
-        .resize(Number(width), Number(height))
-        .toFormat('jpeg')
-        .toFile(outputFilePath)
-        .then(() => {
-          sharp(outputFilePath).pipe(res);
-        })
-        .catch((error) => {
-          res.status(500).send(error);
-        });
-    });
+    if (!fileExist) {
+      return res.status(404).send('File not found');
+    }
+
+    const convertResponse = await imageLib.convertImage(
+      fileName as string,
+      width as unknown as number,
+      height as unknown as number
+    );
+
+    if (!convertResponse) {
+      return res.status(500).send('Failed to convert image');
+    }
+
+    const file = imageLib.readFile(
+      imageLib.getOutputFilePath(
+        imageLib.generateFileName(
+          fileName as string,
+          width as unknown as number,
+          height as unknown as number
+        )
+      )
+    );
+
+    file.pipe(res);
   }
 );
 
