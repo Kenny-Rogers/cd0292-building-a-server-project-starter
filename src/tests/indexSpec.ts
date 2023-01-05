@@ -18,11 +18,13 @@ describe('Images endpoint', () => {
     const width = 200;
     const height = 200;
     const name = 'fjord';
-    const filePath = imageLib.getOutputFilePath(imageLib.generateFileName(name,width, height)); 
+    const filePath = imageLib.getOutputFilePath(
+      imageLib.generateFileName(name, width, height)
+    );
 
     const deleteFileIfExist = await imageLib.deleteFile(filePath);
 
-    if(deleteFileIfExist){
+    if (deleteFileIfExist) {
       const response = await request.get(
         `/images?width=${width}&height=${height}&name=${name}`
       );
