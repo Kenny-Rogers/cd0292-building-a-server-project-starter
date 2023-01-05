@@ -29,6 +29,18 @@ const fileExist = (filePath) => __awaiter(void 0, void 0, void 0, function* () {
         throw error;
     }
 });
+const deleteFile = (filePath) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield fs_1.default.promises.unlink(filePath);
+        return true;
+    }
+    catch (error) {
+        if (error.code === 'ENOENT') {
+            return true;
+        }
+        return false;
+    }
+});
 const readFile = (filePath) => {
     return fs_1.default.createReadStream(filePath);
 };
@@ -50,5 +62,6 @@ exports.default = {
     getInputFilePath,
     fileExist,
     readFile,
-    convertImage
+    convertImage,
+    deleteFile
 };

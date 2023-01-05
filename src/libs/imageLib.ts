@@ -25,6 +25,18 @@ const fileExist = async (filePath: string): Promise<boolean> => {
   }
 };
 
+const deleteFile = async (filePath: string): Promise<boolean> => {
+  try {
+    await fs.promises.unlink(filePath);
+    return true;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return true;
+    }
+    return false;
+  }
+};
+
 const readFile = (filePath: string): fs.ReadStream => {
   return fs.createReadStream(filePath);
 };
@@ -55,5 +67,6 @@ export default {
   getInputFilePath,
   fileExist,
   readFile,
-  convertImage
+  convertImage,
+  deleteFile
 };

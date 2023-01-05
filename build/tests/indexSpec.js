@@ -14,12 +14,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const index_1 = __importDefault(require("../index"));
+const imageLib_1 = __importDefault(require("../libs/imageLib"));
 const request = (0, supertest_1.default)(index_1.default);
 describe('Images endpoint', () => {
     it('should return a resized image', () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield request.get('/images?width=200&height=200&name=fjord');
         expect(response.status).toEqual(200);
         expect(response.headers['content-type']).toBe('image/jpeg');
+    }));
+    it('should return generated resized image', () => __awaiter(void 0, void 0, void 0, function* () {
+        const width = 200;
+        const height = 200;
+        const name = 'fjord';
+        const filePath = imageLib_1.default.getOutputFilePath(imageLib_1.default.generateFileName(name, width, height));
+        const deleteFileIfExist = yield imageLib_1.default.deleteFile(filePath);
+        if (deleteFileIfExist) {
+            const response = yield request.get(`/images?width=${width}&height=${height}&name=${name}`);
+            expect(response.status).toEqual(200);
+            expect(response.headers['content-type']).toBe('image/jpeg');
+        }
+        const fileExist = yield imageLib_1.default.fileExist(filePath);
+        expect(fileExist).toBeTrue();
     }));
     it('should return a 400 error if the width or height or name parameter is missing', () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield request.get('/images?width=200&height=200');
